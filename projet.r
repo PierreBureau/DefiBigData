@@ -26,7 +26,7 @@ for (i in 1:n) {
 }
 
 ####
-# OUVERTURE FICHIERS TEST
+# OUVERTURE FICHIER TEST
 ####
 
 test<-read.csv2("test.csv",header=TRUE,sep=";",colClasses=c(insee="factor",date="Date",ech="factor"))
@@ -66,9 +66,9 @@ summary(test)
 # flsen1SOl0 = 98
 # rr1SOl0 = 2940
 
-# CERATION DE L'ALGORITHME DE L4IMPUTATION SUR LE JEU TRAIN 
+# CERATION DE L'ALGORITHME D'IMPUTATION SUR LE JEU TEST et TRAIN
 
-# Il existe diff?rente m?thode, on choisit d'abord la SVD
+# Il existe différentes méthodes, on choisit d'abord la SVD
 
 train0$jour <- yday(train0$date)
 
@@ -106,6 +106,7 @@ dtrain<-missForest(train2,maxiter=10,
                            ntree = 200, variablewise = TRUE)$ximp
 
 
+# MAJ des variables de TEST
 
 testnew$jour<-yday(testnew$date)
 testnew$insee<-as.factor(as.character(testnew$insee))
@@ -136,29 +137,6 @@ reg<-lm(tH2_obs~.,data=train)
 prediction<-predict(reg,newdata=validation)
 sqrt(mean((prediction-validation[,3])**2))
 
-####
-# MÃ©thode svm
-####
-
-####
-# MÃ©thode xgboost
-####
-train$ech<-as.numeric(as.character(train$ech))
-train <- train[,-c(1,2,7,31)]
-validation$ech<-as.numeric(as.character(validation$ech))
-validation <- validation[,-c(1,2,7,31)]
-sapply(train,class)
-
-library(caret)
-
-# Fitting model
-
-fitControl <- trainControl( method = "repeatedcv", number = 4, repeats = 4)
-
-fit <- train(tH2_obs ~ ., data = train, method = "gbm", trControl = fitControl,verbose = FALSE)
-
-predicted= predict(fit,validation) 
-sqrt(mean((predicted-validation[,1])**2))
 
 ############
 # SEPARATION DES VILLES 
@@ -192,7 +170,7 @@ prediction<-predict(reg1,newdata=validation)
 err1 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -234,6 +212,7 @@ err1 <- sqrt(mean((predicted-validation[,1])**2))
 #########
 # autre gbm
 #########
+
 train <- train[,-c(3,13)]
 validation <- validation[,-c(3,13)]
 
@@ -292,7 +271,7 @@ prediction<-predict(reg2,newdata=validation)
 err2 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -369,7 +348,7 @@ prediction<-predict(reg3,newdata=validation)
 err3 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -447,7 +426,7 @@ prediction<-predict(reg4,newdata=validation)
 err4 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -524,7 +503,7 @@ prediction<-predict(reg5,newdata=validation)
 err5 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -601,7 +580,7 @@ prediction<-predict(reg6,newdata=validation)
 err6 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boostingt
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
@@ -678,7 +657,7 @@ prediction<-predict(reg7,newdata=validation)
 err7 <- sqrt(mean((prediction-validation[,1])**2))
 
 ####
-# MÃ©thode xgboost
+# Méthode boosting
 ####
 
 train$ech<-as.numeric(as.character(train$ech))
